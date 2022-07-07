@@ -1,15 +1,24 @@
 const serverless = require("serverless-http");
 const customers = require("./customers.json");
 const express = require("express");
-const app = express();
+var cors = require('cors')
 
-app.post("/", (req, res, next) => {
+const app = express();
+app.use(cors())
+
+app.post("/customers", (req, res, next) => {
   return res.status(200).json({
     customerIds: customers.map(({ id }) => id),
-  });
+  }).setHeader("Access-Control-Allow-Origin", "*").setHeader('Access-Control-Allow-Credentials', true);
 });
 
-app.get("/:id", (req, res, next) => {
+app.get("/customers", (req, res, next) => {
+  return res.status(200).json({
+    customerIds: customers.map(({ id }) => id),
+  }).setHeader("Access-Control-Allow-Origin", "*").setHeader('Access-Control-Allow-Credentials', true);
+});
+
+app.get("/customers/:id", (req, res, next) => {
   const customerId = req.params.id;
   const item = customers.find(({ id }) => customerId === id);
   if (!item) {
